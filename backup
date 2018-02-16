@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ $# -lt 4 ]
+then
+	echo "Too few parameters."
+	exit 1
+fi
+
+FROM=$1
+TO=$2
+TARNAME=$3
+mkdir -p $TO
+CURPATH=$PWD
+shift 2
+cd $FROM
+for i in "$@"
+do
+	EXPANSION=$i
+	for filename in $(find . -type f -name "*.$EXPANSION")
+	do
+		cp --parents $filename "$CURPATH/$TO"
+	done
+done
+cd $CURPATH
+tar -cf $TARNAME.tar $TO
+echo "done"
